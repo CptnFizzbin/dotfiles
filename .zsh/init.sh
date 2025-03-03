@@ -1,4 +1,4 @@
-INIT_HOME = "$HOME/.zsh/init"
+INIT_HOME="$HOME/.zsh/init"
 
 source "$INIT_HOME/zoxide.sh"
 
