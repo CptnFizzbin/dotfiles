@@ -1,13 +1,14 @@
 export DOTFILES_INIT="$DOTFILES_HOME/init"
 export DOTFILES_LOCAL="$DOTFILES_HOME/local"
 
-source "$DOTFILES_INIT/zoxide.sh"
-source "$DOTFILES_INIT/zsh.sh"
+for filename in $DOTFILES_INIT/*.sh; do
+  source "$filename"
+done
+
+for filename in $DOTFILES_LOCAL/*.sh; do
+  source "$filename"
+done
 
 if [ -s "$DOTFILES_HOME/local.sh" ]; then
-    source "$DOTFILES_HOME/local.sh"
-else
-    echo "[warn] $DOTFILES_HOME/local.sh not found"
+  source "$DOTFILES_HOME/local.sh"
 fi
-
-source "$DOTFILES_HOME/alias.sh"
