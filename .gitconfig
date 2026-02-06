@@ -7,7 +7,8 @@
 	editor = vim
 	autocrlf = input
 	eol = lf
-	sshCommand = ssh.exe
+	# Must explictly be a windows path to ssh.exe, else libcrypto throws an error
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 
 [init]
 	defaultBranch = main
