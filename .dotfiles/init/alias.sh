@@ -35,7 +35,7 @@ alias search_ignore='grep -i --color=auto'
 alias delete='rm -i'
 alias copy='cp -i'
 alias move='mv -i'
-alias force_delete='rm -rf'
+# Note: force_delete removed to maintain safety guarantees. Use /bin/rm -rf when needed.
 
 # ============================================================================
 # SECTION 3: System Information & Monitoring
@@ -215,7 +215,7 @@ alias zshreload='source ~/.zshrc'
 alias aliases='${EDITOR:-vim} ~/.dotfiles/init/alias.sh'
 
 # Process management
-alias pgrep_custom='ps aux | grep -v grep | grep -i -e VSZ -e'
+alias pgrep_custom='ps aux | grep -v grep | grep -i -e VSZ'
 alias kill9='kill -9'
 alias ports_used='lsof -i -P -n | grep LISTEN'
 
@@ -309,7 +309,7 @@ drm-name() {
         echo "Usage: drm-name <container_name_pattern>"
         return 1
     fi
-    docker ps -a | grep "$1" | awk '{print $1}' | xargs -r docker rm -f
+    docker ps -aq --filter "name=$1" | xargs -r docker rm -f
 }
 
 # Kill process running on specific port
@@ -318,9 +318,15 @@ port-kill() {
         echo "Usage: port-kill <port_number>"
         return 1
     fi
-    local process_id=$(lsof -ti:$1)
+    # Ensure the port is a numeric value to prevent command injection
+    if ! [[ "$1" =~ ^[0-9]+$ ]]; then
+        echo "Error: port must be a numeric value"
+        return 1
+    fi
+    local process_id
+    process_id=$(lsof -t -i :"$1")
     if [[ -n "$process_id" ]]; then
-        kill -9 $process_id
+        kill -9 -- $process_id
         echo "Killed process on port $1"
     else
         echo "No process found on port $1"
@@ -337,6 +343,14 @@ serve() {
 # Clean up merged git branches
 git-clean-branches() {
     echo "Cleaning up merged branches..."
-    git branch --merged | grep -v "\*\|main\|master\|develop" | xargs -r git branch -d
+    # List merged branches, excluding current branch (*) and protected branches
+    # Use grep -E for portable extended regex instead of GNU-specific \| in basic regex
+    local branches
+    branches=(${(f)"$(git branch --merged | grep -Ev '^\*|^[[:space:]]*(main|master|develop)$')"})
+    if (( ${#branches} > 0 )); then
+        git branch -d "${branches[@]}"
+    else
+        echo "No merged branches to delete."
+    fi
     echo "Cleanup complete!"
 }
