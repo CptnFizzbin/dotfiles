@@ -1,2 +1,4 @@
 export PATH="$HOME/.local/bin:$PATH"
-source "$HOME/.zsh/init.sh"
+
+export DOTFILES_HOME="$HOME/.dotfiles"
+source "$DOTFILES_HOME/init.sh"
