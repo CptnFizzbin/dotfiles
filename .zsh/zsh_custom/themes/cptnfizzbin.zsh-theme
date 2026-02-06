@@ -9,16 +9,28 @@ parse_version_string () {
 }
 
 python_prompt_info () {
+  if ! command -v python 2>&1 >/dev/null; then
+    return
+  fi
+
   local version="$(python --version | parse_version_string)"
   echo "${ZSH_THEME_PYTHON_PROMPT_PREFIX}${version:gs/%/%%}${ZSH_THEME_PYTHON_PROMPT_SUFFIX}"
 }
 
 node_prompt_info () {
+  if ! command -v node 2>&1 >/dev/null; then
+    return
+  fi
+
   local version="$(node --version | parse_version_string)"
   echo "${ZSH_THEME_NODE_PROMPT_PREFIX}${version:gs/%/%%}${ZSH_THEME_NODE_PROMPT_SUFFIX}"
 }
 
 ruby_prompt_info () {
+  if ! command -v ruby 2>&1 >/dev/null; then
+    return
+  fi
+
   local version="$(ruby --version | parse_version_string)"
   echo "${ZSH_THEME_RUBY_PROMPT_PREFIX}${version:gs/%/%%}${ZSH_THEME_RUBY_PROMPT_SUFFIX}"
 }

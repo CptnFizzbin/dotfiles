@@ -1,4 +1,4 @@
-INIT_HOME = "$HOME/.zsh/init"
+INIT_HOME="$HOME/.zsh/init"
 
 source "$INIT_HOME/zoxide.sh"
 
@@ -8,6 +8,8 @@ source "$INIT_HOME/pyenv.sh"
 
 source "$INIT_HOME/zsh.sh"
 
+source "$INIT_HOME/vault.sh"
 source "$INIT_HOME/jetbrains.sh"
+source "$INIT_HOME/mstools.sh"
 
 source "$HOME/.zsh/alias.sh"
