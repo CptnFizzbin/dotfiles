@@ -7,6 +7,7 @@
 	editor = vim
 	autocrlf = input
 	eol = lf
+	longpaths = true
 	# Must explictly be a windows path to ssh.exe, else libcrypto throws an error
 	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 
@@ -19,6 +20,7 @@
 [gpg "ssh"]
 	program = op-ssh-sign.exe
 	allowedSignersFile = ~/.ssh/allowed_signers
+	program = op-ssh-sign.exe
 
 [push]
 	autoSetupRemote = true
