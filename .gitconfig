@@ -5,8 +5,8 @@
 
 [core]
     editor = vim
-    autocrlf = input
     eol = lf
+    autocrlf = false
     longpaths = true
     # Must explictly be a windows path to ssh.exe, else libcrypto throws an error
     sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
