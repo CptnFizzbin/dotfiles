@@ -4,10 +4,10 @@
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLv5AKuYEfcul9uHzpyTdYCZeKx/IrW01oLZZCnBzux
 
 [core]
-	editor = zed
+	editor = vim
 	autocrlf = input
 	eol = lf
-	sshCommand = C:\\Windows\\System32\\OpenSSH\\ssh.exe
+	sshCommand = ssh.exe
 
 [init]
 	defaultBranch = main
@@ -16,6 +16,7 @@
 	format = ssh
 
 [gpg "ssh"]
+	program = op-ssh-sign.exe
 	allowedSignersFile = ~/.ssh/allowed_signers
 
 [push]
