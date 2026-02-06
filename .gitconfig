@@ -1,38 +1,37 @@
 [user]
-	name = Captain Fizzbin
-	email = code@cptnfizzbin.ca
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLv5AKuYEfcul9uHzpyTdYCZeKx/IrW01oLZZCnBzux
+    name = Captain Fizzbin
+    email = code@cptnfizzbin.ca
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLv5AKuYEfcul9uHzpyTdYCZeKx/IrW01oLZZCnBzux
 
 [core]
-	editor = vim
-	autocrlf = input
-	eol = lf
-	longpaths = true
-	# Must explictly be a windows path to ssh.exe, else libcrypto throws an error
-	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+    editor = vim
+    autocrlf = input
+    eol = lf
+    longpaths = true
+    # Must explictly be a windows path to ssh.exe, else libcrypto throws an error
+    sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [gpg]
-	format = ssh
+    format = ssh
 
 [gpg "ssh"]
-	program = op-ssh-sign.exe
-	allowedSignersFile = ~/.ssh/allowed_signers
-	program = op-ssh-sign.exe
+    allowedSignersFile = ~/.ssh/allowed_signers
+    program = op-ssh-sign.exe
 
 [push]
-	autoSetupRemote = true
+    autoSetupRemote = true
 
 [commit]
-	gpgsign = true
+    gpgsign = true
 
 [rerere]
-	enabled = true
+    enabled = true
 
 [pull]
-	rebase = true
+    rebase = true
 
 [include]
-	path = ~/.gitconfig.local
+    path = ~/.gitconfig.local
