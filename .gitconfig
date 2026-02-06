@@ -1,0 +1,31 @@
+[user]
+	name = Captain Fizzbin
+	email = code@cptnfizzbin.ca
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLv5AKuYEfcul9uHzpyTdYCZeKx/IrW01oLZZCnBzux
+
+[core]
+	editor = vi
+	autocrlf = input
+	eol = lf
+	sshCommand = ssh.exe
+
+[init]
+	defaultBranch = main
+
+[gpg]
+	format = ssh
+
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
+
+[commit]
+	gpgsign = true
+
+[rerere]
+	enabled = true
+
+[pull]
+	rebase = true
+
+[include]
+	path = ~/.gitconfig.local
