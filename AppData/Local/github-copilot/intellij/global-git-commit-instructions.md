@@ -1,0 +1,11 @@
+Prefix commit messages with one of the following tags to indicate the type of change:
+- minor: For small changes that do not affect functionality (e.g., typos, formatting).
+- patch: For bug fixes and minor improvements that do not add new features.
+- feature: For new features or significant enhancements.
+- breaking: For changes that break backward compatibility or introduce significant changes.
+- wip: For work-in-progress commits that are not yet complete.
+- chore: For routine tasks and maintenance that do not affect the codebase (e.g., updating dependencies, refactoring).
+- docs: For changes to documentation only.
+- test: For adding or modifying tests only.
+- ci: For changes to CI/CD pipelines and configurations only.
+- refactor: For code changes that neither fix a bug nor add a feature
