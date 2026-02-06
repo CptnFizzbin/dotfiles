@@ -12,6 +12,8 @@ if (Get-Command fnm -ErrorAction SilentlyContinue) {
     Write-Warning "fnm is not installed. Install it to enable Node.js version management."
 }
 
+Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete
+
 # Custom prompt function
 function prompt {
     # Get current username and computer name
