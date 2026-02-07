@@ -9,12 +9,23 @@ function Switch-DotfilesGit {
     
     $gitPath = Join-Path $RepoRoot ".git"
     $gitDotfilesPath = Join-Path $RepoRoot ".git.dotfiles"
+    $gitTempPath = Join-Path $RepoRoot ".git.temp"
     
-    if (Test-Path $gitPath) {
+    $hasGit = Test-Path $gitPath
+    $hasGitDotfiles = Test-Path $gitDotfilesPath
+    
+    if ($hasGit -and $hasGitDotfiles) {
+        # Both exist - swap them using a temp folder
+        Rename-Item -Path $gitPath -NewName ".git.temp" -Force
+        Rename-Item -Path $gitDotfilesPath -NewName ".git" -Force
+        Rename-Item -Path $gitTempPath -NewName ".git.dotfiles" -Force
+    }
+    elseif ($hasGit) {
+        # Only .git exists - rename to .git.dotfiles
         Rename-Item -Path $gitPath -NewName ".git.dotfiles" -Force
     }
-    
-    if (Test-Path $gitDotfilesPath) {
+    elseif ($hasGitDotfiles) {
+        # Only .git.dotfiles exists - rename to .git
         Rename-Item -Path $gitDotfilesPath -NewName ".git" -Force
     }
 }
