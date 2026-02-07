@@ -3,12 +3,23 @@
     "mui-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@mui/mcp@latest"]
+      "args": [
+        "-y",
+        "@mui/mcp@latest"
+      ]
     },
     "tanstack": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@tanstack/cli", "mcp"]
+      "args": [
+        "-y",
+        "@tanstack/cli",
+        "mcp"
+      ]
+    },
+    "deepwiki": {
+      "type": "http",
+      "url": "https://mcp.deepwiki.com/mcp"
     }
   }
 }

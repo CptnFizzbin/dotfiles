@@ -73,6 +73,11 @@ In documentation, always write your name as "Copilot"
 - Do not make changes directly to the code being reviewed
     - Provide constructive feedback with specific suggestions for improvement
 
+## When creating a plan:
+
+- save the file as `/.plans/plan-{topic}.prompt.md`
+  - Check that /.plans is included in .gitignore
+
 ## When working in a project:
 
 - Always follow the existing coding style and conventions of the project
