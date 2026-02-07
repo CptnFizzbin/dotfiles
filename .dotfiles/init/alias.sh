@@ -359,15 +359,18 @@ git-clean-branches() {
 # SECTION 10: Dotfiles Management Functions (Linux)
 # ============================================================================
 
+# Helper function to get dotfiles repository root
+__dotfiles_repo_root() {
+    if [[ -n "$DOTFILES_HOME" ]]; then
+        dirname "$DOTFILES_HOME"
+    else
+        echo "$HOME"
+    fi
+}
+
 # Update dotfiles from GitHub with rebase
 dot-update() {
-    # Get the repository root (parent of .dotfiles directory)
-    local dotfiles_repo
-    if [[ -n "$DOTFILES_HOME" ]]; then
-        dotfiles_repo="$(dirname "$DOTFILES_HOME")"
-    else
-        dotfiles_repo="$HOME"
-    fi
+    local dotfiles_repo="$(__dotfiles_repo_root)"
     
     echo "Updating dotfiles from GitHub..."
     
@@ -393,21 +396,7 @@ dot-update() {
 
 # Commit all dotfiles changes with optional flags
 dot-commit() {
-    # Get the repository root (parent of .dotfiles directory)
-    local dotfiles_repo
-    if [[ -n "$DOTFILES_HOME" ]]; then
-        dotfiles_repo="$(dirname "$DOTFILES_HOME")"
-    else
-        dotfiles_repo="$HOME"
-    fi
-    
-    # Validate that we have at least some arguments
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: dot-commit <git commit flags>"
-        echo "Example: dot-commit -m 'Update aliases'"
-        echo "Example: dot-commit --amend --no-edit"
-        return 1
-    fi
+    local dotfiles_repo="$(__dotfiles_repo_root)"
     
     echo "Committing dotfiles changes..."
     
@@ -417,12 +406,9 @@ dot-commit() {
         return 1
     }
     
-    # Add all changes
-    git add .
-    
-    # Commit with all provided flags/arguments
+    # Add all changes and commit only if add succeeds
     # Using "$@" preserves all arguments exactly as passed
-    git commit "$@"
+    git add . && git commit "$@"
     local exit_code=$?
     
     popd > /dev/null
@@ -437,13 +423,7 @@ dot-commit() {
 
 # Push dotfiles changes to GitHub
 dot-push() {
-    # Get the repository root (parent of .dotfiles directory)
-    local dotfiles_repo
-    if [[ -n "$DOTFILES_HOME" ]]; then
-        dotfiles_repo="$(dirname "$DOTFILES_HOME")"
-    else
-        dotfiles_repo="$HOME"
-    fi
+    local dotfiles_repo="$(__dotfiles_repo_root)"
     
     echo "Pushing dotfiles to GitHub..."
     
@@ -453,8 +433,8 @@ dot-push() {
         return 1
     }
     
-    # Push to origin
-    git push
+    # Push to origin explicitly
+    git push origin
     local exit_code=$?
     
     popd > /dev/null
