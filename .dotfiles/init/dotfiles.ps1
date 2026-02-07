@@ -1,78 +1,41 @@
 # Dotfiles management functions
-
-# Helper function to swap .git and .git.dotfiles folders
-function Switch-DotfilesGit {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$RepoRoot
-    )
-    
-    $gitPath = Join-Path $RepoRoot ".git"
-    $gitDotfilesPath = Join-Path $RepoRoot ".git.dotfiles"
-    $gitTempPath = Join-Path $RepoRoot ".git.temp"
-    
-    $hasGit = Test-Path $gitPath
-    $hasGitDotfiles = Test-Path $gitDotfilesPath
-    
-    if ($hasGit -and $hasGitDotfiles) {
-        # Both exist - swap them using a temp folder
-        Rename-Item -Path $gitPath -NewName ".git.temp" -Force
-        Rename-Item -Path $gitDotfilesPath -NewName ".git" -Force
-        Rename-Item -Path $gitTempPath -NewName ".git.dotfiles" -Force
-    }
-    elseif ($hasGit) {
-        # Only .git exists - rename to .git.dotfiles
-        Rename-Item -Path $gitPath -NewName ".git.dotfiles" -Force
-    }
-    elseif ($hasGitDotfiles) {
-        # Only .git.dotfiles exists - rename to .git
-        Rename-Item -Path $gitDotfilesPath -NewName ".git" -Force
-    }
+function Push-LocationDotfiles {
+    Push-Location "~"
 }
 
-# Helper function to ensure branch is prefixed with "windows"
-function Ensure-WindowsBranchPrefix {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$RepoRoot
-    )
-    
-    Push-Location $RepoRoot
-    try {
-        $currentBranch = git rev-parse --abbrev-ref HEAD 2>$null
-        if ($currentBranch -and $currentBranch -ne "HEAD" -and -not $currentBranch.StartsWith("windows")) {
-            $newBranch = "windows-$currentBranch"
-            Write-Host "Renaming branch from '$currentBranch' to '$newBranch'..." -ForegroundColor Yellow
-            git branch -m $newBranch
-        }
+function Enable-DotfilesGit {
+    $gitPath = Join-Path "~" ".git"
+    $gitDotfilesPath = Join-Path "~" ".git.dotfiles"
+
+    if (Test-Path $gitPath)
+    {
+        return
     }
-    finally {
-        Pop-Location
+
+    Rename-Item -Path $gitDotfilesPath -NewName ".git" -Force
+}
+
+function Disable-DotfilesGit {
+    $gitPath = Join-Path "~" ".git"
+    $gitDotfilesPath = Join-Path "~" ".git.dotfiles"
+
+    if (Test-Path $gitDotfilesPath)
+    {
+        return
     }
+
+    Rename-Item -Path $gitPath -NewName ".git.dotfiles" -Force
 }
 
 function dot-update {
-    <#
-    .SYNOPSIS
-    Updates dotfiles by pulling with rebase from the remote repository.
-    #>
-    $dotfilesPath = Split-Path -Parent $PROFILE
-    Push-Location $dotfilesPath
+    Push-LocationDotfiles
+
     try {
-        # Navigate to the dotfiles repository root (two levels up from PowerShell directory)
-        $repoRoot = Split-Path -Parent (Split-Path -Parent $dotfilesPath)
-        Set-Location $repoRoot
-        
-        # Swap .git folders to access dotfiles repository
-        Switch-DotfilesGit -RepoRoot $repoRoot
-        
+        Enable-DotfilesGit
         try {
-            # Ensure branch is prefixed with "windows"
-            Ensure-WindowsBranchPrefix -RepoRoot $repoRoot
-            
             Write-Host "Updating dotfiles from repository..." -ForegroundColor Cyan
             git pull --rebase
-            
+
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "Dotfiles updated successfully!" -ForegroundColor Green
             } else {
@@ -80,8 +43,7 @@ function dot-update {
             }
         }
         finally {
-            # Swap .git folders back to original state
-            Switch-DotfilesGit -RepoRoot $repoRoot
+            Disable-DotfilesGit
         }
     }
     finally {
@@ -90,34 +52,19 @@ function dot-update {
 }
 
 function dot-commit {
-    <#
-    .SYNOPSIS
-    Commits all changes in the dotfiles repository.
-    .DESCRIPTION
-    Adds all changes and commits them with the provided git commit flags.
-    #>
     param(
         [Parameter(ValueFromRemainingArguments=$true)]
         [string[]]$CommitArgs
     )
-    
-    $dotfilesPath = Split-Path -Parent $PROFILE
-    Push-Location $dotfilesPath
+
+    Push-LocationDotfiles
+
     try {
-        # Navigate to the dotfiles repository root (two levels up from PowerShell directory)
-        $repoRoot = Split-Path -Parent (Split-Path -Parent $dotfilesPath)
-        Set-Location $repoRoot
-        
-        # Swap .git folders to access dotfiles repository
-        Switch-DotfilesGit -RepoRoot $repoRoot
-        
+        Enable-DotfilesGit
         try {
-            # Ensure branch is prefixed with "windows"
-            Ensure-WindowsBranchPrefix -RepoRoot $repoRoot
-            
             Write-Host "Adding all changes..." -ForegroundColor Cyan
             git add .
-            
+
             if ($CommitArgs) {
                 Write-Host "Committing changes..." -ForegroundColor Cyan
                 git commit @CommitArgs
@@ -125,7 +72,7 @@ function dot-commit {
                 Write-Host "Committing changes..." -ForegroundColor Cyan
                 git commit
             }
-            
+
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "Changes committed successfully!" -ForegroundColor Green
             } else {
@@ -133,8 +80,7 @@ function dot-commit {
             }
         }
         finally {
-            # Swap .git folders back to original state
-            Switch-DotfilesGit -RepoRoot $repoRoot
+            Disable-DotfilesGit
         }
     }
     finally {
@@ -143,27 +89,14 @@ function dot-commit {
 }
 
 function dot-push {
-    <#
-    .SYNOPSIS
-    Pushes dotfiles changes to GitHub.
-    #>
-    $dotfilesPath = Split-Path -Parent $PROFILE
-    Push-Location $dotfilesPath
+    Push-LocationDotfiles
+
     try {
-        # Navigate to the dotfiles repository root (two levels up from PowerShell directory)
-        $repoRoot = Split-Path -Parent (Split-Path -Parent $dotfilesPath)
-        Set-Location $repoRoot
-        
-        # Swap .git folders to access dotfiles repository
-        Switch-DotfilesGit -RepoRoot $repoRoot
-        
+        Enable-DotfilesGit
         try {
-            # Ensure branch is prefixed with "windows"
-            Ensure-WindowsBranchPrefix -RepoRoot $repoRoot
-            
             Write-Host "Pushing changes to GitHub..." -ForegroundColor Cyan
             git push
-            
+
             if ($LASTEXITCODE -eq 0) {
                 Write-Host "Changes pushed successfully!" -ForegroundColor Green
             } else {
@@ -171,8 +104,7 @@ function dot-push {
             }
         }
         finally {
-            # Swap .git folders back to original state
-            Switch-DotfilesGit -RepoRoot $repoRoot
+            Disable-DotfilesGit
         }
     }
     finally {
