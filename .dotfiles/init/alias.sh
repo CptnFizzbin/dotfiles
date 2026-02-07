@@ -354,3 +354,115 @@ git-clean-branches() {
     fi
     echo "Cleanup complete!"
 }
+
+# ============================================================================
+# SECTION 10: Dotfiles Management Functions (Linux)
+# ============================================================================
+
+# Update dotfiles from GitHub with rebase
+dot-update() {
+    # Get the repository root (parent of .dotfiles directory)
+    local dotfiles_repo
+    if [[ -n "$DOTFILES_HOME" ]]; then
+        dotfiles_repo="$(dirname "$DOTFILES_HOME")"
+    else
+        dotfiles_repo="$HOME"
+    fi
+    
+    echo "Updating dotfiles from GitHub..."
+    
+    # Change to dotfiles repository root
+    pushd "$dotfiles_repo" > /dev/null || {
+        echo "Error: Could not change to dotfiles repository: $dotfiles_repo"
+        return 1
+    }
+    
+    # Pull with rebase
+    git pull --rebase
+    local exit_code=$?
+    
+    popd > /dev/null
+    
+    if [[ $exit_code -eq 0 ]]; then
+        echo "✓ Dotfiles updated successfully!"
+    else
+        echo "✗ Failed to update dotfiles"
+        return $exit_code
+    fi
+}
+
+# Commit all dotfiles changes with optional flags
+dot-commit() {
+    # Get the repository root (parent of .dotfiles directory)
+    local dotfiles_repo
+    if [[ -n "$DOTFILES_HOME" ]]; then
+        dotfiles_repo="$(dirname "$DOTFILES_HOME")"
+    else
+        dotfiles_repo="$HOME"
+    fi
+    
+    # Validate that we have at least some arguments
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: dot-commit <git commit flags>"
+        echo "Example: dot-commit -m 'Update aliases'"
+        echo "Example: dot-commit --amend --no-edit"
+        return 1
+    fi
+    
+    echo "Committing dotfiles changes..."
+    
+    # Change to dotfiles repository root
+    pushd "$dotfiles_repo" > /dev/null || {
+        echo "Error: Could not change to dotfiles repository: $dotfiles_repo"
+        return 1
+    }
+    
+    # Add all changes
+    git add .
+    
+    # Commit with all provided flags/arguments
+    # Using "$@" preserves all arguments exactly as passed
+    git commit "$@"
+    local exit_code=$?
+    
+    popd > /dev/null
+    
+    if [[ $exit_code -eq 0 ]]; then
+        echo "✓ Dotfiles committed successfully!"
+    else
+        echo "✗ Failed to commit dotfiles"
+        return $exit_code
+    fi
+}
+
+# Push dotfiles changes to GitHub
+dot-push() {
+    # Get the repository root (parent of .dotfiles directory)
+    local dotfiles_repo
+    if [[ -n "$DOTFILES_HOME" ]]; then
+        dotfiles_repo="$(dirname "$DOTFILES_HOME")"
+    else
+        dotfiles_repo="$HOME"
+    fi
+    
+    echo "Pushing dotfiles to GitHub..."
+    
+    # Change to dotfiles repository root
+    pushd "$dotfiles_repo" > /dev/null || {
+        echo "Error: Could not change to dotfiles repository: $dotfiles_repo"
+        return 1
+    }
+    
+    # Push to origin
+    git push
+    local exit_code=$?
+    
+    popd > /dev/null
+    
+    if [[ $exit_code -eq 0 ]]; then
+        echo "✓ Dotfiles pushed successfully!"
+    else
+        echo "✗ Failed to push dotfiles"
+        return $exit_code
+    fi
+}
