@@ -1,31 +1,32 @@
 [user]
-	name = Captain Fizzbin
-	email = code@cptnfizzbin.ca
-	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLv5AKuYEfcul9uHzpyTdYCZeKx/IrW01oLZZCnBzux
+    name = Captain Fizzbin
+    email = code@cptnfizzbin.ca
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFLv5AKuYEfcul9uHzpyTdYCZeKx/IrW01oLZZCnBzux
 
 [core]
-	editor = vi
-	autocrlf = input
-	eol = lf
-	sshCommand = ssh.exe
+    editor = vi
+    autocrlf = input
+    eol = lf
+    sshCommand = /mnt/c/WINDOWS/System32/OpenSSH/ssh.exe
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [gpg]
-	format = ssh
+    format = ssh
 
 [gpg "ssh"]
-	allowedSignersFile = ~/.ssh/allowed_signers
+    program = op-ssh-sign.exe
+    allowedSignersFile = ~/.ssh/allowed_signers
 
 [commit]
-	gpgsign = true
+    gpgsign = true
 
 [rerere]
-	enabled = true
+    enabled = true
 
 [pull]
-	rebase = true
+    rebase = true
 
 [include]
-	path = ~/.gitconfig.local
+    path = ~/.gitconfig.local
