@@ -18,17 +18,43 @@ __dotfiles_repo_root() {
 # Helper function to enable git for dotfiles (rename .git.dotfiles to .git)
 __dotfiles_git_enable() {
     local dotfiles_repo="$(__dotfiles_repo_root)"
-    if [[ -d "$dotfiles_repo/.git.dotfiles" && ! -d "$dotfiles_repo/.git" ]]; then
-        mv "$dotfiles_repo/.git.dotfiles" "$dotfiles_repo/.git"
+    
+    # Handle case where both .git and .git.dotfiles exist
+    if [[ -d "$dotfiles_repo/.git" && -d "$dotfiles_repo/.git.dotfiles" ]]; then
+        echo "Error: Both .git and .git.dotfiles exist. Please resolve manually." >&2
+        return 1
     fi
+    
+    # Only move if .git.dotfiles exists (handles manual renaming)
+    if [[ -d "$dotfiles_repo/.git.dotfiles" ]]; then
+        if ! mv "$dotfiles_repo/.git.dotfiles" "$dotfiles_repo/.git" 2>/dev/null; then
+            echo "Error: Failed to enable git directory (rename .git.dotfiles to .git)" >&2
+            return 1
+        fi
+    fi
+    
+    return 0
 }
 
 # Helper function to disable git for dotfiles (rename .git to .git.dotfiles)
 __dotfiles_git_disable() {
     local dotfiles_repo="$(__dotfiles_repo_root)"
-    if [[ -d "$dotfiles_repo/.git" && ! -d "$dotfiles_repo/.git.dotfiles" ]]; then
-        mv "$dotfiles_repo/.git" "$dotfiles_repo/.git.dotfiles"
+    
+    # Handle case where both .git and .git.dotfiles exist
+    if [[ -d "$dotfiles_repo/.git" && -d "$dotfiles_repo/.git.dotfiles" ]]; then
+        echo "Error: Both .git and .git.dotfiles exist. Please resolve manually." >&2
+        return 1
     fi
+    
+    # Only move if .git exists
+    if [[ -d "$dotfiles_repo/.git" ]]; then
+        if ! mv "$dotfiles_repo/.git" "$dotfiles_repo/.git.dotfiles" 2>/dev/null; then
+            echo "Error: Failed to disable git directory (rename .git to .git.dotfiles)" >&2
+            return 1
+        fi
+    fi
+    
+    return 0
 }
 
 # Update dotfiles from GitHub with rebase
@@ -43,8 +69,15 @@ dot-update() {
         return 1
     }
     
+    # Set up trap to ensure cleanup on exit/interrupt
+    trap '__dotfiles_git_disable; popd > /dev/null 2>&1' EXIT INT TERM
+    
     # Enable git for dotfiles operations
-    __dotfiles_git_enable
+    if ! __dotfiles_git_enable; then
+        trap - EXIT INT TERM
+        popd > /dev/null
+        return 1
+    fi
     
     # Pull with rebase
     git pull --rebase
@@ -53,6 +86,8 @@ dot-update() {
     # Disable git for dotfiles
     __dotfiles_git_disable
     
+    # Clear trap and popd
+    trap - EXIT INT TERM
     popd > /dev/null
     
     if [[ $exit_code -eq 0 ]]; then
@@ -75,8 +110,15 @@ dot-commit() {
         return 1
     }
     
+    # Set up trap to ensure cleanup on exit/interrupt
+    trap '__dotfiles_git_disable; popd > /dev/null 2>&1' EXIT INT TERM
+    
     # Enable git for dotfiles operations
-    __dotfiles_git_enable
+    if ! __dotfiles_git_enable; then
+        trap - EXIT INT TERM
+        popd > /dev/null
+        return 1
+    fi
     
     # Add all changes and commit only if add succeeds
     # Using "$@" preserves all arguments exactly as passed
@@ -86,6 +128,8 @@ dot-commit() {
     # Disable git for dotfiles
     __dotfiles_git_disable
     
+    # Clear trap and popd
+    trap - EXIT INT TERM
     popd > /dev/null
     
     if [[ $exit_code -eq 0 ]]; then
@@ -108,15 +152,14 @@ dot-push() {
         return 1
     }
     
+    # Set up trap to ensure cleanup on exit/interrupt
+    trap '__dotfiles_git_disable; popd > /dev/null 2>&1' EXIT INT TERM
+    
     # Enable git for dotfiles operations
-    __dotfiles_git_enable
-    
-    # Get current branch name
-    local current_branch=$(git branch --show-current)
-    
-    # Ensure branch is prefixed with 'linux'
-    if [[ ! "$current_branch" =~ ^linux ]]; then
-        echo "Warning: Branch '$current_branch' does not start with 'linux' prefix"
+    if ! __dotfiles_git_enable; then
+        trap - EXIT INT TERM
+        popd > /dev/null
+        return 1
     fi
     
     # Push to origin explicitly
@@ -126,6 +169,8 @@ dot-push() {
     # Disable git for dotfiles
     __dotfiles_git_disable
     
+    # Clear trap and popd
+    trap - EXIT INT TERM
     popd > /dev/null
     
     if [[ $exit_code -eq 0 ]]; then
