@@ -1,6 +1,6 @@
 # Load PowerShell dotfiles
-$dotfilesRoot = Split-Path -Parent (Split-Path -Parent $PROFILE)
-$initScript = Join-Path $dotfilesRoot ".dotfiles" "init.ps1"
+# Assume .dotfiles is at ~/.dotfiles
+$initScript = Join-Path $HOME ".dotfiles" "init.ps1"
 
 if (Test-Path $initScript) {
     . $initScript

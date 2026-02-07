@@ -2,12 +2,11 @@
 # This script loads all PowerShell configuration modules
 
 # Get the path to the dotfiles directory
-# If $PROFILE is set, calculate from there; otherwise use current script location
-if ($PROFILE -and (Test-Path $PROFILE)) {
-    $dotfilesRoot = Split-Path -Parent (Split-Path -Parent $PROFILE)
-    $dotfilesHome = Join-Path $dotfilesRoot ".dotfiles"
-} else {
-    # Fallback: use the directory containing this script
+# Assume .dotfiles is at ~/.dotfiles
+$dotfilesHome = Join-Path $HOME ".dotfiles"
+
+# Validate the path exists, otherwise fall back to script location
+if (-not (Test-Path $dotfilesHome)) {
     $dotfilesHome = $PSScriptRoot
 }
 
