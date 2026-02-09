@@ -51,6 +51,50 @@ function dot-update {
     }
 }
 
+function dot-add {
+    param(
+        [Parameter(ValueFromRemainingArguments=$true)]
+        [string[]]$CommitArgs
+    )
+
+    Push-LocationDotfiles
+
+    try {
+        Enable-DotfilesGit
+        try {
+            git add -f @CommitArgs
+        }
+        finally {
+            Disable-DotfilesGit
+        }
+    }
+    finally {
+        Pop-Location
+    }
+}
+
+function dot-status {
+    param(
+        [Parameter(ValueFromRemainingArguments=$true)]
+        [string[]]$CommitArgs
+    )
+
+    Push-LocationDotfiles
+
+    try {
+        Enable-DotfilesGit
+        try {
+            git status @CommitArgs
+        }
+        finally {
+            Disable-DotfilesGit
+        }
+    }
+    finally {
+        Pop-Location
+    }
+}
+
 function dot-commit {
     param(
         [Parameter(ValueFromRemainingArguments=$true)]
