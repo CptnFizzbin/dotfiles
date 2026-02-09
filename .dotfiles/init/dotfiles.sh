@@ -98,6 +98,38 @@ dot-update() {
     fi
 }
 
+dot-status() {
+    local dotfiles_repo="$(__dotfiles_repo_root)"
+    
+    # Change to dotfiles repository root
+    pushd "$dotfiles_repo" > /dev/null || {
+        echo "Error: Could not change to dotfiles repository: $dotfiles_repo"
+        return 1
+    }
+    
+    # Set up trap to ensure cleanup on exit/interrupt
+    trap '__dotfiles_git_disable; popd > /dev/null 2>&1' EXIT INT TERM
+    
+    # Enable git for dotfiles operations
+    if ! __dotfiles_git_enable; then
+        trap - EXIT INT TERM
+        popd > /dev/null
+        return 1
+    fi
+    
+    # Add all changes and commit only if add succeeds
+    # Using "$@" preserves all arguments exactly as passed
+    git status "$@"
+    local exit_code=$?
+    
+    # Disable git for dotfiles
+    __dotfiles_git_disable
+    
+    # Clear trap and popd
+    trap - EXIT INT TERM
+    popd > /dev/null
+}
+
 # Commit all dotfiles changes with optional flags
 dot-commit() {
     local dotfiles_repo="$(__dotfiles_repo_root)"
