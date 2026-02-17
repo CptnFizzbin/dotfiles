@@ -1,9 +1,10 @@
-# Dotfiles management functions
-function Push-LocationDotfiles {
+function Push-LocationDotfiles
+{
     Push-Location "~"
 }
 
-function Enable-DotfilesGit {
+function Enable-DotfilesGit
+{
     $gitPath = Join-Path "~" ".git"
     $gitDotfilesPath = Join-Path "~" ".git.dotfiles"
 
@@ -15,7 +16,8 @@ function Enable-DotfilesGit {
     Rename-Item -Path $gitDotfilesPath -NewName ".git" -Force
 }
 
-function Disable-DotfilesGit {
+function Disable-DotfilesGit
+{
     $gitPath = Join-Path "~" ".git"
     $gitDotfilesPath = Join-Path "~" ".git.dotfiles"
 
@@ -27,31 +29,37 @@ function Disable-DotfilesGit {
     Rename-Item -Path $gitPath -NewName ".git.dotfiles" -Force
 }
 
-function dot-update {
+function Update-Dotfiles
+{
     Push-LocationDotfiles
 
-    try {
+    try
+    {
         Enable-DotfilesGit
-        try {
+        try
+        {
             Write-Host "Updating dotfiles from repository..." -ForegroundColor Cyan
             git pull --rebase
 
-            if ($LASTEXITCODE -eq 0) {
+            if ($LASTEXITCODE -eq 0)
+            {
                 Write-Host "Dotfiles updated successfully!" -ForegroundColor Green
-            } else {
+            } else
+            {
                 Write-Host "Failed to update dotfiles." -ForegroundColor Red
             }
-        }
-        finally {
+        } finally
+        {
             Disable-DotfilesGit
         }
-    }
-    finally {
+    } finally
+    {
         Pop-Location
     }
 }
 
-function dot-add {
+function Get-DotfilesStatus
+{
     param(
         [Parameter(ValueFromRemainingArguments=$true)]
         [string[]]$CommitArgs
@@ -59,43 +67,24 @@ function dot-add {
 
     Push-LocationDotfiles
 
-    try {
+    try
+    {
         Enable-DotfilesGit
-        try {
-            git add -f @CommitArgs
-        }
-        finally {
-            Disable-DotfilesGit
-        }
-    }
-    finally {
-        Pop-Location
-    }
-}
-
-function dot-status {
-    param(
-        [Parameter(ValueFromRemainingArguments=$true)]
-        [string[]]$CommitArgs
-    )
-
-    Push-LocationDotfiles
-
-    try {
-        Enable-DotfilesGit
-        try {
+        try
+        {
             git status @CommitArgs
-        }
-        finally {
+        } finally
+        {
             Disable-DotfilesGit
         }
-    }
-    finally {
+    } finally
+    {
         Pop-Location
     }
 }
 
-function dot-commit {
+function Save-Dotfiles
+{
     param(
         [Parameter(ValueFromRemainingArguments=$true)]
         [string[]]$CommitArgs
@@ -103,55 +92,66 @@ function dot-commit {
 
     Push-LocationDotfiles
 
-    try {
+    try
+    {
         Enable-DotfilesGit
-        try {
+        try
+        {
             Write-Host "Adding all changes..." -ForegroundColor Cyan
             git add .
 
-            if ($CommitArgs) {
+            if ($CommitArgs)
+            {
                 Write-Host "Committing changes..." -ForegroundColor Cyan
                 git commit @CommitArgs
-            } else {
+            } else
+            {
                 Write-Host "Committing changes..." -ForegroundColor Cyan
                 git commit
             }
 
-            if ($LASTEXITCODE -eq 0) {
+            if ($LASTEXITCODE -eq 0)
+            {
                 Write-Host "Changes committed successfully!" -ForegroundColor Green
-            } else {
+            } else
+            {
                 Write-Host "Failed to commit changes." -ForegroundColor Red
             }
-        }
-        finally {
+        } finally
+        {
             Disable-DotfilesGit
         }
-    }
-    finally {
+    } finally
+    {
         Pop-Location
     }
 }
 
-function dot-push {
+function Sync-Dotfiles
+{
     Push-LocationDotfiles
 
-    try {
+    try
+    {
         Enable-DotfilesGit
-        try {
+        try
+        {
             Write-Host "Pushing changes to GitHub..." -ForegroundColor Cyan
             git push
 
-            if ($LASTEXITCODE -eq 0) {
+            if ($LASTEXITCODE -eq 0)
+            {
                 Write-Host "Changes pushed successfully!" -ForegroundColor Green
-            } else {
+            } else
+            {
                 Write-Host "Failed to push changes." -ForegroundColor Red
             }
-        }
-        finally {
+        } finally
+        {
             Disable-DotfilesGit
         }
-    }
-    finally {
+    } finally
+    {
         Pop-Location
     }
 }

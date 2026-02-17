@@ -8,7 +8,8 @@
     eol = lf
     autocrlf = false
     longpaths = true
-    # Must explictly be a windows path to ssh.exe, else libcrypto throws an error
+    # Must explictly be a windows path to ssh.exe, otherwise it throws an error
+    # when it tries to use ssh from cygen
     sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 
 [init]
@@ -18,8 +19,7 @@
     format = ssh
 
 [gpg "ssh"]
-    allowedSignersFile = ~/.ssh/allowed_signers
-    program = op-ssh-sign.exe
+	# to be configured in .gitconfig.local
 
 [push]
     autoSetupRemote = true
