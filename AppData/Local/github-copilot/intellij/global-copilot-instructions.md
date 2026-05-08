@@ -128,19 +128,23 @@ In documentation, always write your name as "Copilot"
 
 ## Command line and terminal usage:
 
-- Assume the console is in the project root directory.
-    - You don't need to specify `cd` or `Push-Location` commands unless navigating to a subdirectory for a specific
-      reason
-- When chaining commands with `&&` or `;`:
-    - ALWAYS use a newline after each operator for readability
-    - Example format:
-      ```
-      npm install &&
-      npm test
-      ```
+- **ALWAYS** use the provided tools first instead of running commands directly in the terminal.
+  - This will provide you better and more concise context
+  
+- **ALWAYS** use a newline after each operator when chaining commands with `&&` or `;`:
+  - This improves readability and makes it easier to identify individual commands in the chain
+  - Example format:
+    ```
+    npm install &&
+    npm test
+    ```
+
+- *Important*: 
+  - You can assume the terminal has been opened within the project directory unless specified otherwise
+  - You don't need to navigate to the project directory before running commands
+  - You can run commands directly without prefixing them with `cd` to the project directory 
+
 - **Terminal bug workaround:** If you stop receiving output from terminal commands:
-    - Inform the user that the terminal appears unresponsive
-    - Ask them to restart the terminal
-    - Don't keep trying commands if output has clearly stopped flowing
-
-
+  - Inform the user that the terminal appears unresponsive
+  - Ask them to restart the terminal
+  - Don't keep trying commands if output has clearly stopped flowing

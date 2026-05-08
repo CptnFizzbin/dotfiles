@@ -19,7 +19,7 @@
     format = ssh
 
 [gpg "ssh"]
-	# to be configured in .gitconfig.local
+    allowedSignersFile = ~/.ssh/allowed_signers
 
 [push]
     autoSetupRemote = true
