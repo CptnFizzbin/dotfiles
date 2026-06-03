@@ -2,3 +2,6 @@
 
 !/.dotfiles/
 !/.dotfiles/**
+
+!/.agents/
+!/.agents/**
