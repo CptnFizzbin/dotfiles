@@ -115,3 +115,10 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+# Source dotfiles init scripts (shared config with zsh)
+export DOTFILES_HOME="${DOTFILES_HOME:-$HOME/.dotfiles}"
+if [ -f "$DOTFILES_HOME/init.sh" ]; then
+    # shellcheck source=.dotfiles/init.sh
+    . "$DOTFILES_HOME/init.sh"
+fi

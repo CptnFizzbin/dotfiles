@@ -1,0 +1,32 @@
+# Local machine overrides
+# Copy this file to local.sh — it is gitignored and stays on this machine only.
+# Loaded after all init/*.sh scripts, so any value here takes precedence.
+
+# ── Identity ──────────────────────────────────────────────────────────────
+# Override git identity for work machines (use includeIf in .gitconfig for
+# per-repo overrides instead of a global override here).
+# export GIT_AUTHOR_EMAIL="you@company.com"
+# export GIT_COMMITTER_EMAIL="you@company.com"
+
+# ── PATH additions ────────────────────────────────────────────────────────
+# export PATH="$PATH:/opt/custom-tool/bin"
+
+# ── Proxy ─────────────────────────────────────────────────────────────────
+# export http_proxy="http://proxy.company.com:8080"
+# export https_proxy="$http_proxy"
+# export no_proxy="localhost,127.0.0.1,.company.com"
+
+# ── Editor ────────────────────────────────────────────────────────────────
+# export EDITOR=nvim
+# export VISUAL=nvim
+
+# ── Machine-specific aliases ──────────────────────────────────────────────
+# alias work='cd ~/projects/work'
+# alias vpn='sudo openconnect vpn.company.com'
+
+# ── Docker ────────────────────────────────────────────────────────────────
+# export DOCKER_HOST="tcp://localhost:2375"
+
+# ── Secrets / tokens (prefer a secrets manager over this file) ────────────
+# export GITHUB_TOKEN="ghp_..."
+# export NPM_TOKEN="..."

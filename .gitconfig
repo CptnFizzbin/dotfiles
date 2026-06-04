@@ -28,5 +28,25 @@
 [pull]
     rebase = true
 
+# Per-directory identity override — copy the block and adjust the path/email
+# for work repos so personal commits don't leak a work address and vice versa.
+# [includeIf "gitdir:~/projects/work/"]
+#     path = ~/.gitconfig.work
+# ~/.gitconfig.work should contain:
+#   [user]
+#       email = you@company.com
+
+# git-delta — syntax-highlighted diffs. Uncomment after: cargo install git-delta
+# (or: brew install git-delta / apt install git-delta)
+# [core]
+#     pager = delta
+# [interactive]
+#     diffFilter = delta --color-only
+# [delta]
+#     navigate = true
+#     dark = true
+#     side-by-side = true
+#     line-numbers = true
+
 [include]
     path = ~/.gitconfig.local

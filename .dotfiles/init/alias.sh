@@ -213,6 +213,7 @@ alias c.='code .'
 alias zshrc='${EDITOR:-vim} ~/.zshrc'
 alias zshreload='source ~/.zshrc'
 alias aliases='${EDITOR:-vim} ~/.dotfiles/init/alias.sh'
+alias dot-bench='for i in $(seq 1 5); do /usr/bin/time zsh -i -c exit 2>&1; done'
 
 # Process management
 alias pgrep_custom='ps aux | grep -v grep | grep -i -e VSZ'

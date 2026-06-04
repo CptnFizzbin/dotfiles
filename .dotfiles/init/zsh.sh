@@ -74,6 +74,8 @@ plugins=(
     yarn
     docker
     docker-compose
+    zsh-autosuggestions
+    zsh-syntax-highlighting
 )
 
 # configuration complte, init  OhMyZsh
