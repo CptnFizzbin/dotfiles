@@ -5,3 +5,9 @@
 
 !/.agents/
 !/.agents/**
+
+!/.copilot/
+!/.copilot/**
+
+!/.claude/
+!/.claude/**
