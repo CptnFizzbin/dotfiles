@@ -8,5 +8,3 @@ if (Test-Path $initScript) {
     Write-Warning "Dotfiles initialization script not found at: $initScript"
 }
 
-# fnm (Fast Node Manager) shell integration
-fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
